@@ -14,12 +14,8 @@ function updateconfig {
 	sed -i -E "/^#?rpcthreads=/c\\rpcthreads=$RPCTHREADS" /etc/bitcoin/bitcoin.conf
 	sed -i -E "/^#?rpcworkqueue=/c\\rpcworkqueue=$RPCWORKQUEUE" /etc/bitcoin/bitcoin.conf
 	sed -i -E "/^#?maxmempool=/c\\maxmempool=$MAXMEMPOOL" /etc/bitcoin/bitcoin.conf
-	sed -i -E "/^#?blockmaxsize=/c\\blockmaxsize=$BLOCKMAXSIZE" /etc/bitcoin/bitcoin.conf
 	sed -i -E "/^#?blockmaxweight=/c\\blockmaxweight=$BLOCKMAXWEIGHT" /etc/bitcoin/bitcoin.conf
-	sed -i -E "/^#?maxorphantx=/c\\maxorphantx=$BLOCKMAXWEIGHT" /etc/bitcoin/bitcoin.conf
-	sed -i -E "/^#?maxorphantx=/c\\maxorphantx=$BLOCKMAXWEIGHT" /etc/bitcoin/bitcoin.conf
 	sed -i -E "/^#?blockreconstructionextratxn=/c\\blockreconstructionextratxn=$BLOCKRECONSTRUCTIONEXTRATXN" /etc/bitcoin/bitcoin.conf
-	sed -i -E "/^#?blockreconstructionextratxnsize=/c\\blockreconstructionextratxnsize=$BLOCKRECONSTRUCTIONEXTRATXNSIZE" /etc/bitcoin/bitcoin.conf
 }
 
 if ! command -v whiptail &> /dev/null; then
@@ -71,11 +67,8 @@ case $SIZE in
 		RPCTHREADS=64
 		RPCWORKQUEUE=64
 		MAXMEMPOOL=1000
-		BLOCKMAXSIZE=3985000
 		BLOCKMAXWEIGHT=3985000
 		BLOCKRECONSTRUCTIONEXTRATXN=1000000
-		BLOCKRECONSTRUCTIONEXTRATXNSIZE=100
-		MAXORPHANTX=50000
 		updateconfig
 	;;
 	
@@ -88,11 +81,8 @@ case $SIZE in
 		RPCTHREADS=64
 		RPCWORKQUEUE=64
 		MAXMEMPOOL=1000
-		BLOCKMAXSIZE=3985000
 		BLOCKMAXWEIGHT=3985000
 		BLOCKRECONSTRUCTIONEXTRATXN=1000000
-		BLOCKRECONSTRUCTIONEXTRATXNSIZE=100
-		MAXORPHANTX=50000
 		updateconfig
 		sed -i -E "/^LimitNOFILE=/c\\LimitNOFILE=131072" /usr/lib/systemd/system/datum-gateway.service
 		systemctl daemon-reload
@@ -100,12 +90,12 @@ case $SIZE in
 esac
 
 if [ "$SIZE" = "3." ]; then
-	if ! dpkg-reconfigure -plow bitcoin-knots datum-gateway; then
-		NEWT_COLORS="root=white,red" whiptail --msgbox "Failed to reconfigure Bitcoin Knots and/or DATUM Gateway" 0 0
+	if ! dpkg-reconfigure -plow bitcoin-core datum-gateway; then
+		NEWT_COLORS="root=white,red" whiptail --msgbox "Failed to reconfigure Bitcoin Core and/or DATUM Gateway" 0 0
 		exit 1
 	fi
-elif ! dpkg-reconfigure -pmedium bitcoin-knots datum-gateway; then
-	NEWT_COLORS="root=white,red" whiptail --msgbox "Failed to reconfigure Bitcoin Knots and/or DATUM Gateway" 0 0
+elif ! dpkg-reconfigure -pmedium bitcoin-core datum-gateway; then
+	NEWT_COLORS="root=white,red" whiptail --msgbox "Failed to reconfigure Bitcoin Core and/or DATUM Gateway" 0 0
 	exit 1
 fi
 

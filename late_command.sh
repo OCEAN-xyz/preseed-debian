@@ -1,6 +1,12 @@
+cat > /target/etc/apt/preferences.d/ocean.pref << EOF
+Package: bitcoin-core datum-gateway
+Pin: release o=ocean
+Pin-Priority: 1001
+EOF
+
 in-target sed -i "/^deb[[:space:]]\+cdrom:/d" /etc/apt/sources.list 2>/dev/null
 in-target apt-get update
-in-target apt-get install -y bitcoin-knots/trixie-backports datum-gateway/trixie-backports curl/trixie-backports magic-wormhole openvpn unzip
+in-target apt-get install -y bitcoin-core datum-gateway curl magic-wormhole openvpn unzip
 
 # Create user for factory (deleted upon first config)
 in-target useradd -m -G sudo -s /bin/bash -U factory

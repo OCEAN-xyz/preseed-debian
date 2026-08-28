@@ -7,15 +7,15 @@ function logs {
 	LOGSMENU="choice"
 	while [ "$LOGSMENU" != "5." ]
 	do
-	LOGSMENU=$(whiptail --nocancel --title "Logs menu" --menu "" 0 0 0 "1." "Show Bitcoin Knots logs (follow)" \
+	LOGSMENU=$(whiptail --nocancel --title "Logs menu" --menu "" 0 0 0 "1." "Show Bitcoin Core logs (follow)" \
 																	   "2." "Show DATUM Gateway logs (follow)" \
-																	   "3." "Show Bitcoin Knots logs (full)" \
+																	   "3." "Show Bitcoin Core logs (full)" \
 																	   "4." "Show DATUM Gateway logs (full)" \
 																	   "5." "Return to main menu" 3>&1 1>&2 2>&3)
 	
 	case $LOGSMENU in
 		1.)
-			journalctl -f -u bitcoin-knots || true
+			journalctl -f -u bitcoin-core || true
 		;;
 		
 		2.)
@@ -23,7 +23,7 @@ function logs {
 		;;
 		
 		3.)
-			journalctl -r -u bitcoin-knots || true
+			journalctl -r -u bitcoin-core || true
 		;;
 		
 		4.)
@@ -34,34 +34,34 @@ function logs {
 	trap - INT
 }
 
-function knots_settings {
-	KNOTSMENU="choice"
-	while [ "$KNOTSMENU" != "5." ]
+function core_settings {
+	COREMENU="choice"
+	while [ "$COREMENU" != "5." ]
 	do
-	KNOTSMENU=$(whiptail --nocancel --title "Bitcoin Knots settings" --menu "" 0 0 0 "1." "Start Bitcoin Knots" \
-																					 "2." "Stop Bitcoin Knots" \
-																					 "3." "Restart Bitcoin Knots" \
-																					 "4." "Reconfigure Bitcoin Knots" \
+	COREMENU=$(whiptail --nocancel --title "Bitcoin Core settings" --menu "" 0 0 0 "1." "Start Bitcoin Core" \
+																					 "2." "Stop Bitcoin Core" \
+																					 "3." "Restart Bitcoin Core" \
+																					 "4." "Reconfigure Bitcoin Core" \
 																					 "5." "Return to main menu" 3>&1 1>&2 2>&3)
 	
-	case $KNOTSMENU in
+	case $COREMENU in
 		1.)
-			systemctl start bitcoin-knots
-			NEWT_COLORS="root=white,green" whiptail --msgbox "Bitcoin Knots has started" 0 0
+			systemctl start bitcoin-core
+			NEWT_COLORS="root=white,green" whiptail --msgbox "Bitcoin Core has started" 0 0
 		;;
 		
 		2.)
-			systemctl stop bitcoin-knots
-			NEWT_COLORS="root=white,green" whiptail --msgbox "Bitcoin Knots has stopped" 0 0
+			systemctl stop bitcoin-core
+			NEWT_COLORS="root=white,green" whiptail --msgbox "Bitcoin Core has stopped" 0 0
 		;;
 		
 		3.)
-			systemctl restart bitcoin-knots
-			NEWT_COLORS="root=white,green" whiptail --msgbox "Bitcoin Knots has restarted" 0 0
+			systemctl restart bitcoin-core
+			NEWT_COLORS="root=white,green" whiptail --msgbox "Bitcoin Core has restarted" 0 0
 		;;
 		
 		4.)
-			dpkg-reconfigure bitcoin-knots
+			dpkg-reconfigure bitcoin-core
 		;;
 	esac
 	done
@@ -111,7 +111,7 @@ function tool_menu {
 	
 	case $TOOLMENU in
 		1.)
-			whiptail --msgbox "Loading a snapshot will take some time, please be patient.\nOnce done, please consult the logs of Bitcoin Knots to see the sync progression." 0 0
+			whiptail --msgbox "Loading a snapshot will take some time, please be patient.\nOnce done, please consult the logs of Bitcoin Core to see the sync progression." 0 0
 			
 			rm -rf /var/lib/bitcoin/snap/
 			sudo -u bitcoin mkdir -p /var/lib/bitcoin/snap
@@ -122,7 +122,7 @@ function tool_menu {
 		
 		2.)
 			URL=$(whiptail --inputbox "Please enter the link to the UTXO snapshot:" 0 0 3>&1 1>&2 2>&3) || break
-			whiptail --msgbox "Loading a snapshot will take some time, please be patient.\nOnce done, please consult the logs of Bitcoin Knots to see the sync progression." 0 0
+			whiptail --msgbox "Loading a snapshot will take some time, please be patient.\nOnce done, please consult the logs of Bitcoin Core to see the sync progression." 0 0
 			
 			rm -rf /var/lib/bitcoin/snap/
 			sudo -u bitcoin mkdir -p /var/lib/bitcoin/snap
@@ -193,7 +193,7 @@ MENU=$(whiptail --nocancel --title "DATUM box menu" --menu "" 0 0 0 "1." "Show n
 																	"2." "Show estimated hashrate" \
 																	"3." "Check bitcoind template endpoint" \
 																	"4." "Logs menu" \
-																	"5." "Bitcoin Knots settings" \
+																	"5." "Bitcoin Core settings" \
 																	"6." "DATUM Gateway settings" \
 																	"7." "Tools" \
 																	"8." "Power" \
@@ -225,7 +225,7 @@ case $MENU in
 			elif [ $(curl --user $(sudo -u bitcoin cat /var/lib/bitcoin/.cookie) --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblocktemplate", "params": [{"rules": ["segwit"]}]}' -H 'content-type: text/plain;' -s http://127.0.0.1:8332/ | jq '.error.code') = "-10" ]; then
 				NEWT_COLORS="root=white,#FFA500" whiptail --msgbox "bitcoind is still still downloading the Bitcoin blockchain.\nbitcoind will start making block template once done." 0 0
 			else
-				NEWT_COLORS="root=white,red" whiptail --msgbox "bitcoind isn't serving block template, please check the Bitcoin Knots logs for more information." 0 0
+				NEWT_COLORS="root=white,red" whiptail --msgbox "bitcoind isn't serving block template, please check the Bitcoin Core logs for more information." 0 0
 			fi
 		else
 			NEWT_COLORS="root=white,red" whiptail --msgbox "No cookie file detected, are you sure bitcoind is running?" 0 0
@@ -237,7 +237,7 @@ case $MENU in
 	;;
 	
 	5.)
-		knots_settings
+		core_settings
 	;;
 	
 	6.)
