@@ -100,11 +100,11 @@ case $SIZE in
 esac
 
 if [ "$SIZE" = "3." ]; then
-	if ! dpkg-reconfigure -plow bitcoin-core datum-gateway; then
+	if ! dpkg-reconfigure -plow bitcoin-knots datum-gateway; then
 		NEWT_COLORS="root=white,red" whiptail --msgbox "Failed to reconfigure Bitcoin Knots and/or DATUM Gateway" 0 0
 		exit 1
 	fi
-elif ! dpkg-reconfigure -pmedium bitcoin-core datum-gateway; then
+elif ! dpkg-reconfigure -pmedium bitcoin-knots datum-gateway; then
 	NEWT_COLORS="root=white,red" whiptail --msgbox "Failed to reconfigure Bitcoin Knots and/or DATUM Gateway" 0 0
 	exit 1
 fi

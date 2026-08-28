@@ -50,12 +50,6 @@ chmod +w -R debianfiles/install.$ISOISTDIR/
 gunzip debianfiles/install.$ISOISTDIR/initrd.gz
 cp ../preseed.cfg ../post_config.sh ../happen_bashrc ../menu.sh ../late_command.sh ../factory.sh .
 
-if [ "$ARCH" = "amd64" ]; then
-	cp ../package/bitcoin-core_31.1-1~bpo13+1_amd64.deb bitcoin-core.deb
-elif [ "$ARCH" = "arm64" ]; then
-	cp ../package/bitcoin-core_31.1-1~bpo13+1_arm64.deb bitcoin-core.deb
-fi
-
 if [ "$BTCADDRESS" ]; then
 	sed -i "6i echo \"set datum-gateway/bitcoin-address $BTCADDRESS\" | debconf-communicate" post_config.sh
 fi
@@ -72,7 +66,6 @@ echo menu.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo happen_bashrc | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo late_command.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo factory.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
-echo bitcoin-core.deb | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 gzip debianfiles/install.$ISOISTDIR/initrd
 chmod -w -R debianfiles/install.$ISOISTDIR/
 

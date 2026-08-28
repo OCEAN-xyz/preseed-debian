@@ -41,7 +41,7 @@ case $MENU in
 	
 	3.)
 		trap 'true' INT
-		journalctl -f -u bitcoin-core || true
+		journalctl -f -u bitcoin-knots || true
 		trap - INT
 	;;
 	
