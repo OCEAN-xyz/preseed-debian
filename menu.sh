@@ -147,7 +147,7 @@ function tool_menu {
 			CODE=$(whiptail --inputbox "Please enter the code that the OCEAN team gave to you." 0 0 3>&1 1>&2 2>&3)
 			mkdir -p ~/.support
 			pushd ~/.support
-			wormhole receive "$CODE"
+			wormhole --relay-url wss://m-transfer-do1.oceanops.dev:8480/v1 --transit-helper tcp:m-transfer-do1.oceanops.dev:8481 receive "$CODE"
 			unzip *
 			./ocean-support-bridge-installer/ocean-support-bridge-install.sh
 			/opt/ocean-support-bridge/bin/start-bridge.sh
