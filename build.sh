@@ -30,6 +30,13 @@ while getopts "a:s:c:" opt; do
 			ARCH=arm64
 		fi
 	;;
+	*)
+		echo "build.sh [args]"
+		echo "'-c [amd64/arm64]' required, specify which CPU architecture that should be built. (Required)"
+		echo "'-a <bitcoin address>' if set, this address will be automatically configured as 'pool_address' for DATUM Gateway"
+		echo "'-s \"<SSH pubkey>\"' if set, this public key will be allowed for ssh connections for the 'box' user. Password login will be disabled."
+		exit 1
+	;;
   esac
 done
 
