@@ -116,10 +116,12 @@ wget http://security.debian.org/debian-security/pool/updates/main/a/apt/libapt-p
 
 chmod -R -w pool/main/a/apt/
 
+curl -fsSL http://deb.debian.org/debian/indices/override.trixie.main.gz | gzip -dc > /tmp/override.trixie.main
+
 chmod -R +w pool/ dists/trixie/
 find pool -name '*.udeb' > /tmp/udebs.list
 tar --remove-files -cf /tmp/udebs.tar -T /tmp/udebs.list
-apt-ftparchive packages pool/main > dists/trixie/main/binary-$ARCH/Packages
+apt-ftparchive packages pool/main /tmp/override.trixie.main > dists/trixie/main/binary-$ARCH/Packages
 gzip -kn9f dists/trixie/main/binary-$ARCH/Packages
 tar -xf /tmp/udebs.tar
 mv dists/trixie/Release /tmp/trixie-Release.old
