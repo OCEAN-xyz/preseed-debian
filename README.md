@@ -6,7 +6,7 @@ The default user is `box` and the password is `datumbox` (It will automatically 
 
 Depedency:
 ```
-sudo apt install -y xorriso wget gzip
+sudo apt install -y xorriso wget gzip apt-utils cpio curl
 ```
 
 Build:
