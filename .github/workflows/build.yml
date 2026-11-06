@@ -13,7 +13,7 @@ jobs:
     container: debian:stable
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: build the amd64 image
         run: |
@@ -30,7 +30,7 @@ jobs:
     container: debian:stable
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: build the arm64 image
         run: |
