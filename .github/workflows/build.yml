@@ -10,13 +10,14 @@ on:
 jobs:
   amd64:
     runs-on: ubuntu-latest
+    container: debian:stable
 
     steps:
       - uses: actions/checkout@v4
 
       - name: build the amd64 image
         run: |
-          sudo apt-get update && sudo apt-get install -y xorriso wget gzip
+          apt-get update && apt-get install -y xorriso wget gzip apt-utils cpio
           ./build.sh -c amd64
 
       - uses: actions/upload-artifact@v7
@@ -26,13 +27,14 @@ jobs:
 
   arm64:
     runs-on: ubuntu-latest
+    container: debian:stable
 
     steps:
       - uses: actions/checkout@v4
 
       - name: build the arm64 image
         run: |
-          sudo apt-get update && sudo apt-get install -y xorriso wget gzip
+          apt-get update && apt-get install -y xorriso wget gzip apt-utils cpio
           ./build.sh -c arm64
 
       - uses: actions/upload-artifact@v7
