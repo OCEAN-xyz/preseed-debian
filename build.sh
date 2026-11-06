@@ -102,8 +102,41 @@ menuentry "Automated Install" {
 }
 EOF
 chmod -w debianfiles/boot/grub/grub.cfg
-
 cd debianfiles
+
+chmod -R +w pool/main/a/apt/
+rm -f pool/main/a/apt/*
+
+wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt_3.0.4_$ARCH.deb	-O pool/main/a/apt/apt_3.0.4_$ARCH.deb
+wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt-utils_3.0.4_$ARCH.deb -O pool/main/a/apt/apt-utils_3.0.4_$ARCH.deb
+wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt-transport-https_3.0.4_all.deb -O pool/main/a/apt/apt-transport-https_3.0.4_all.deb
+wget http://security.debian.org/debian-security/pool/updates/main/a/apt/libapt-pkg7.0_3.0.4_$ARCH.deb -O pool/main/a/apt/libapt-pkg7.0_3.0.4_$ARCH.deb
+
+chmod -R -w pool/main/a/apt/
+
+chmod -R +w pool/ dists/trixie/
+find pool -name '*.udeb' > /tmp/udebs.list
+tar --remove-files -cf /tmp/udebs.tar -T /tmp/udebs.list
+apt-ftparchive packages pool/main > dists/trixie/main/binary-$ARCH/Packages
+gzip -kn9f dists/trixie/main/binary-$ARCH/Packages
+tar -xf /tmp/udebs.tar
+mv dists/trixie/Release /tmp/trixie-Release.old
+apt-ftparchive \
+  -o APT::FTPArchive::Release::Origin="Debian" \
+  -o APT::FTPArchive::Release::Label="Debian" \
+  -o APT::FTPArchive::Release::Suite="stable" \
+  -o APT::FTPArchive::Release::Version="13.5" \
+  -o APT::FTPArchive::Release::Codename="trixie" \
+  -o APT::FTPArchive::Release::Acquire-By-Hash="yes" \
+  -o APT::FTPArchive::Release::Architectures="$ARCH" \
+  -o APT::FTPArchive::Release::Components="main contrib" \
+  -o APT::FTPArchive::Release::Description="Debian 13.5 Released 16 May 2026" \
+  release dists/trixie > /tmp/trixie-Release
+sed -i '1i No-Support-for-Architecture-all: Packages' /tmp/trixie-Release
+mv /tmp/trixie-Release dists/trixie/Release
+
+chmod -R -w pool/ dists/trixie/
+
 chmod +w md5sum.txt
 find -follow -type f ! -name md5sum.txt -print0 | xargs -0 md5sum > md5sum.txt
 chmod -w md5sum.txt
