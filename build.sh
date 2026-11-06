@@ -107,10 +107,12 @@ cd debianfiles
 chmod -R +w pool/main/a/apt/
 rm -f pool/main/a/apt/*
 
-wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt_3.0.4_$ARCH.deb	-O pool/main/a/apt/apt_3.0.4_$ARCH.deb
+wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt_3.0.4_$ARCH.deb -O pool/main/a/apt/apt_3.0.4_$ARCH.deb
 wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt-utils_3.0.4_$ARCH.deb -O pool/main/a/apt/apt-utils_3.0.4_$ARCH.deb
 wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt-transport-https_3.0.4_all.deb -O pool/main/a/apt/apt-transport-https_3.0.4_all.deb
 wget http://security.debian.org/debian-security/pool/updates/main/a/apt/libapt-pkg7.0_3.0.4_$ARCH.deb -O pool/main/a/apt/libapt-pkg7.0_3.0.4_$ARCH.deb
+
+(cd pool/main/a/apt/ && sha256sum -c ../../../../../../apt-${ARCH}.sha256)
 
 chmod -R -w pool/main/a/apt/
 
