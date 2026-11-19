@@ -55,7 +55,7 @@ echo $SHASUM | sha512sum -c
 xorriso -osirrox on -indev debian-13.7.0-$ARCH-netinst.iso -extract / debianfiles
 chmod +w -R debianfiles/install.$ISOISTDIR/
 gunzip debianfiles/install.$ISOISTDIR/initrd.gz
-cp ../preseed.cfg ../post_config.sh ../happen_bashrc ../menu.sh ../late_command.sh ../factory.sh .
+cp ../preseed.cfg ../post_config.sh ../happen_bashrc ../late_command.sh ../factory.sh .
 
 if [ "$BTCADDRESS" ]; then
 	sed -i "6i echo \"set datum-gateway/bitcoin-address $BTCADDRESS\" | debconf-communicate" post_config.sh
@@ -69,7 +69,6 @@ fi
 
 echo preseed.cfg | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo post_config.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
-echo menu.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo happen_bashrc | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo late_command.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd
 echo factory.sh | cpio -H newc -o -A -F debianfiles/install.$ISOISTDIR/initrd

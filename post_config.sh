@@ -118,4 +118,4 @@ if [ -f /home/box/need_config ]; then
 	rm /home/box/need_config
 fi
 
-sudo menu.sh
+sudo ocean-menu

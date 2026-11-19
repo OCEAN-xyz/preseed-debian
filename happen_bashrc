@@ -1,4 +1,4 @@
-alias menu="sudo menu.sh"
+alias menu="sudo ocean-menu"
 
 if [ -f ~/need_config ]; then
    echo "Please type your password again:"
