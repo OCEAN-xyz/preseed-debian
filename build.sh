@@ -17,15 +17,15 @@ while getopts "a:s:c:" opt; do
 		fi
 		
 		if [ "$OPTARG" = "amd64" ]; then
-			URL=https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.7.0-amd64-netinst.iso
-			SHASUM="ef04d0276850d70e4aaec0b55003628660e9631b26e35215a70ab3c8c707294a4b12731bc73c75a932902f703a7c278310ca99df28d6b36fb06d5618d8d0f678  debian-13.7.0-amd64-netinst.iso"
+			URL=https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.8.0-amd64-netinst.iso
+			SHASUM="825d85a068532854f81c2d99a1890d8dfa969beeafd2ace976d86fb22ca5a3b0e4012f8b681682e668db3b883bd5f4e3dcdbdb2685f945a27aef0230558eaadb  debian-13.8.0-amd64-netinst.iso"
 			ISOISTDIR=amd
 			ARCH=amd64
 		fi
 
 		if [ "$OPTARG" = "arm64" ]; then
-			URL=https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/debian-13.7.0-arm64-netinst.iso
-			SHASUM="cff08e2f29c2846f0503fe57ad1085b5067f29acab444acdf7cdf5b10f2a11140a0e87828e4ffeb9828d188053690467ebe50151c142551d6053fc3288808b86  debian-13.7.0-arm64-netinst.iso"
+			URL=https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/debian-13.8.0-arm64-netinst.iso
+			SHASUM="ae2dde2547b19238bab6f44e348c6e19880d9b4919a51839c488e63951170d3f50aaa6301e3e2c175664a9847c01d1a0f6374599449e6cbd712c755934b2766b  debian-13.8.0-arm64-netinst.iso"
 			ISOISTDIR=a64
 			ARCH=arm64
 		fi
@@ -52,7 +52,7 @@ cd build
 wget $URL
 echo $SHASUM | sha512sum -c
 
-xorriso -osirrox on -indev debian-13.7.0-$ARCH-netinst.iso -extract / debianfiles
+xorriso -osirrox on -indev debian-13.8.0-$ARCH-netinst.iso -extract / debianfiles
 chmod +w -R debianfiles/install.$ISOISTDIR/
 gunzip debianfiles/install.$ISOISTDIR/initrd.gz
 cp ../preseed.cfg ../post_config.sh ../happen_bashrc ../late_command.sh ../factory.sh .
@@ -103,53 +103,16 @@ EOF
 chmod -w debianfiles/boot/grub/grub.cfg
 cd debianfiles
 
-chmod -R +w pool/main/a/apt/
-rm -f pool/main/a/apt/*
-
-wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt_3.0.4_$ARCH.deb -O pool/main/a/apt/apt_3.0.4_$ARCH.deb
-wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt-utils_3.0.4_$ARCH.deb -O pool/main/a/apt/apt-utils_3.0.4_$ARCH.deb
-wget http://security.debian.org/debian-security/pool/updates/main/a/apt/apt-transport-https_3.0.4_all.deb -O pool/main/a/apt/apt-transport-https_3.0.4_all.deb
-wget http://security.debian.org/debian-security/pool/updates/main/a/apt/libapt-pkg7.0_3.0.4_$ARCH.deb -O pool/main/a/apt/libapt-pkg7.0_3.0.4_$ARCH.deb
-
-(cd pool/main/a/apt/ && sha256sum -c ../../../../../../apt-${ARCH}.sha256)
-
-chmod -R -w pool/main/a/apt/
-
-curl -fsSL http://deb.debian.org/debian/indices/override.trixie.main.gz | gzip -dc > /tmp/override.trixie.main
-
-chmod -R +w pool/ dists/trixie/
-find pool -name '*.udeb' > /tmp/udebs.list
-tar --remove-files -cf /tmp/udebs.tar -T /tmp/udebs.list
-apt-ftparchive packages pool/main /tmp/override.trixie.main > dists/trixie/main/binary-$ARCH/Packages
-gzip -kn9f dists/trixie/main/binary-$ARCH/Packages
-tar -xf /tmp/udebs.tar
-mv dists/trixie/Release /tmp/trixie-Release.old
-apt-ftparchive \
-  -o APT::FTPArchive::Release::Origin="Debian" \
-  -o APT::FTPArchive::Release::Label="Debian" \
-  -o APT::FTPArchive::Release::Suite="stable" \
-  -o APT::FTPArchive::Release::Version="13.7" \
-  -o APT::FTPArchive::Release::Codename="trixie" \
-  -o APT::FTPArchive::Release::Acquire-By-Hash="yes" \
-  -o APT::FTPArchive::Release::Architectures="$ARCH" \
-  -o APT::FTPArchive::Release::Components="main contrib" \
-  -o APT::FTPArchive::Release::Description="Debian 13.7 Released 12 September 2026" \
-  release dists/trixie > /tmp/trixie-Release
-sed -i '1i No-Support-for-Architecture-all: Packages' /tmp/trixie-Release
-mv /tmp/trixie-Release dists/trixie/Release
-
-chmod -R -w pool/ dists/trixie/
-
 chmod +w md5sum.txt
 find -follow -type f ! -name md5sum.txt -print0 | xargs -0 md5sum > md5sum.txt
 chmod -w md5sum.txt
 cd ..
 
 if [ "$ARCH" = "amd64" ]; then
-	dd if=debian-13.7.0-amd64-netinst.iso bs=1 count=432 of=isohdpfx.bin
+	dd if=debian-13.8.0-amd64-netinst.iso bs=1 count=432 of=isohdpfx.bin
 	
 	xorriso -as mkisofs \
-		-r -V 'Debian 13.7.0 amd64 n' \
+		-r -V 'Debian 13.8.0 amd64 n' \
 		-o ../DATUM-box-amd64.iso \
 		-J -joliet-long -cache-inodes \
 		-isohybrid-mbr isohdpfx.bin \
@@ -162,10 +125,10 @@ if [ "$ARCH" = "amd64" ]; then
 fi
 
 if [ "$ARCH" = "arm64" ]; then
-	dd if=debian-13.7.0-arm64-netinst.iso bs=512 skip=1427456 count=8192 of=efi.img
+	dd if=debian-13.8.0-arm64-netinst.iso bs=512 skip=1427456 count=8192 of=efi.img
 	
 	xorriso -as mkisofs \
-		-r -V 'Debian 13.7.0 arm64 n' \
+		-r -V 'Debian 13.8.0 arm64 n' \
 		-o ../DATUM-box-arm64.iso \
 		-J -joliet-long -cache-inodes \
 		-e boot/grub/efi.img \
