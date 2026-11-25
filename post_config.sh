@@ -24,6 +24,10 @@ if ! command -v whiptail &> /dev/null; then
 	exit 1
 fi
 
+if [ -f /usr/local/share/policy-rc.d ]; then
+	install -m 0755 /usr/local/share/policy-rc.d /usr/sbin/policy-rc.d
+fi
+
 whiptail --msgbox "Thanks for mining with us!\nLet's do the last steps to configure your datum box." 0 0
 
 PASSWORD="todo"
